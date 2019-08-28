@@ -192,13 +192,19 @@ export default {
         },
 
         onPaste(e) {
-            e.preventDefault();
-
-             // get a plain representation of the clipboard
-            var text = e.clipboardData.getData("text/plain");
-
-            // insert that plain text text manually
-            document.execCommand("insertHTML", false, text);
+            if (this.mergedOptions.sanitizer) {
+                e.preventDefault();
+                const html = e.clipboardData.getData("text/html");
+                const sanitized = this.mergedOptions.sanitizer(html);
+                if(sanitized instanceof Promise)
+                    return sanitized.then((html) => document.execCommand("insertHTML", false, html));
+                return document.execCommand("insertHTML", false, sanitized);
+            }
+            if (this.mergedOptions.forcePlainTextOnPaste === true) {
+                e.preventDefault();
+                var text = e.clipboardData.getData("text/plain");
+                document.execCommand("insertText", false, text);
+            }
         },
 
         syncHTML () {
@@ -215,11 +221,8 @@ export default {
         this.$refs.content.addEventListener("focus", this.onFocus);
         this.$refs.content.addEventListener("input", this.onInput);
         this.$refs.content.addEventListener("blur", this.onContentBlur, { capture: true });
+        this.$refs.content.addEventListener("paste", this.onPaste);
 
-        if (this.mergedOptions.forcePlainTextOnPaste === true) {
-            this.$refs.content.addEventListener("paste", this.onPaste);
-        }
-        
         this.$refs.content.style.maxHeight = this.mergedOptions.maxHeight;
     },
 
@@ -230,6 +233,7 @@ export default {
       this.$refs.content.removeEventListener("blur", this.onContentBlur);
       this.$refs.content.removeEventListener("input", this.onInput);
       this.$refs.content.removeEventListener("focus", this.onFocus);
+      this.$refs.content.removeEventListener("paste", this.onPaste);
     }
 }
 </script>
