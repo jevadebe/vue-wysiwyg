@@ -1,6 +1,6 @@
 {
-  "name": "vue-wysiwyg",
-  "version": "1.7.1",
+  "name": "vue-wysiwyg-sanitizer",
+  "version": "1.7.2",
   "description": "A WYSIWYG HTML editor for Vue.js",
   "keywords": [
     "vue",
@@ -9,7 +9,7 @@
     "html",
     "editor"
   ],
-  "author": "Gregory <gregory.mkv@gmail.com>",
+  "author": "Jeroen <jeroen@v-d-berg.com>",
   "license": "MIT",
   "main": "dist/vueWysiwyg.js",
   "style": "dist/vueWysiwyg.css",
