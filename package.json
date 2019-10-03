@@ -1,6 +1,6 @@
 {
   "name": "vue-wysiwyg-sanitizer",
-  "version": "1.7.2",
+  "version": "1.7.4",
   "description": "A WYSIWYG HTML editor for Vue.js",
   "keywords": [
     "vue",

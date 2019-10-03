@@ -1,19 +1,19 @@
 <template lang="pug">
-div(@mousedown="onBtnClick")
-	a(:class="'vw-btn-'+module.title", v-html="module.icon")
+div()
+
+	a(:class="'vw-btn-'+module.title", v-html="module.icon", @click="onBtnClick")
 
 	.dashboard(
-		v-show="showDashboard",
+		v-if="showDashboard",
 		ref="dashboard"
 	)
 		component(
-      v-if="module.render",
-      v-once,
       ref="moduleDashboard",
       :is="module",
       @exec="exec",
-      :uid="uid"
-      :options="options"
+      :uid="uid",
+      :options="options",
+	  @closedashboard="closeDashboard"
     )
 
 </template>
@@ -44,9 +44,9 @@ export default {
 			this.showDashboard = true;
 		},
 
-    exec () {
-      this.$parent.exec.apply(null, arguments)
-    },
+		exec () {
+			this.$parent.exec.apply(null, arguments)
+		},
 
 		onBtnClick ($event) {
 			$event.preventDefault();
@@ -58,7 +58,10 @@ export default {
 			}
 
 			else if (
-				this.module.render !== undefined &&
+				(
+					this.module.render !== undefined
+					|| this.module.prototype._render
+				) &&
 				(!this.$refs.dashboard || !this.$refs.dashboard.contains($event.target))
 			) {
 				this.showDashboard = !this.showDashboard;
